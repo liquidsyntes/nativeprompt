@@ -35,7 +35,7 @@ A test asserts every rule has `id`, `title`, `why`, `source`, `check`, `action`;
 
 The 25 distinct URLs used as rule, harness and generation-page sources, plus the 24 URLs in the self-update manifest, all returned **HTTP 200** when checked on 2026‑07‑30.
 
-> Verified by: `nativeprompt rules`, `nativeprompt/rules/_sources.json`, and 91 tests in `tests/test_rules.py`.
+> Verified by: `nativeprompt rules`, `nativeprompt/rules/_sources.json`, and 92 tests in `tests/test_rules.py`.
 
 ### Each edit is explained with a link
 
@@ -51,7 +51,7 @@ The tool classifies the task into one of `trivial | planning | goal | loop | wor
 
 ### Self-update actually fetches
 
-`nativeprompt update` downloads the 27 canonical `.md` / `llms.txt` vendor pages listed in `rules/_sources.json`, hashes them with SHA‑256, and diffs against `rules/_snapshot.json`. It exits non‑zero when something changed or is new, so CI can fail on it; `.github/workflows/update-rules.yml` runs it weekly.
+`nativeprompt update` downloads the 28 canonical `.md` / `llms.txt` vendor pages listed in `rules/_sources.json`, hashes them with SHA‑256, and diffs against `rules/_snapshot.json`. It exits non‑zero when something changed or is new, so CI can fail on it; `.github/workflows/update-rules.yml` runs it weekly.
 
 A real run on 2026‑07‑30: **14 fetched — 9 unchanged, 1 changed, 4 new, 0 unreachable → action needed.** That is the mechanism working, not a passing grade: it means a maintainer owes the cheatsheet a review pass.
 
@@ -113,7 +113,7 @@ Findings also gained an order. It used to be the order of lines in the rule file
 
 Both fields travel with the finding, so every finding in `--json` gained `unless` and `priority`. Keys were only added: nothing was renamed or removed, and existing consumers keep working.
 
-> Verified by: 91 tests in `tests/test_rules.py`. For every rule whose `action` is `warn` or `restructure`, the clause is non-empty, longer than twenty characters, names a condition, does not restate `why`, and is not shared with any other rule — a guard against a template written to satisfy the test, with the openings checked separately. Every rule has a priority, all three levels are in use, and the finding order is non-decreasing and stable over the corpus × 3 models. The clause is verified on all three outputs, including a real run of `hooks/nativeprompt_hook.py`.
+> Verified by: 92 tests in `tests/test_rules.py`. For every rule whose `action` is `warn` or `restructure`, the clause is non-empty, longer than twenty characters, names a condition, does not restate `why`, and is not shared with any other rule — a guard against a template written to satisfy the test, with the openings checked separately. Every rule has a priority, all three levels are in use, and the finding order is non-decreasing and stable over the corpus × 3 models. The clause is verified on all three outputs, including a real run of `hooks/nativeprompt_hook.py`.
 
 ### The tool can refuse to rewrite
 
@@ -298,10 +298,10 @@ Separately, on why the project's own tests missed all of this. There were 67 and
 ## How to verify
 
 ```bash
-# 1. Test suite — 2517 tests, no dependencies beyond pytest
+# 1. Test suite — 2518 tests, no dependencies beyond pytest
 cd nativeprompt && python3 -m pytest -q
-# 2517 passed
-#   688 invariant · 528 hook budget · 479 reproducibility card · 361 self-check · 91 rule integrity · 73 regressions · 69 prompt-as-data · 32 detection · 30 opus-5.5-rules · 28 gpt-6-rules · 23 refusal · 23 capabilities · 23 fable-rules · 23 astra · 10 coverage · 10 install · 9 analysis · 8 rewrite · 6 harness · 3 update
+# 2518 passed
+#   688 invariant · 528 hook budget · 479 reproducibility card · 361 self-check · 92 rule integrity · 73 regressions · 69 prompt-as-data · 32 detection · 30 opus-5.5-rules · 28 gpt-6-rules · 23 refusal · 23 capabilities · 23 fable-rules · 23 astra · 10 coverage · 10 install · 9 analysis · 8 rewrite · 6 harness · 3 update
 
 # 2. Every rule with its official source — spot-check the links
 python3 -m nativeprompt rules claude

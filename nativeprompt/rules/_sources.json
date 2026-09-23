@@ -20,6 +20,7 @@
       "docs": [
         "https://developers.openai.com/api/docs/guides/reasoning.md",
         "https://developers.openai.com/api/docs/guides/prompt-guidance.md",
+        "https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6.md",
         "https://learn.chatgpt.com/docs/prompting.md",
         "https://learn.chatgpt.com/docs/config-file/config-reference.md",
         "https://learn.chatgpt.com/docs/agent-configuration/agents-md.md",

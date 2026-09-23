@@ -4,7 +4,7 @@
   "display": "Codex",
   "surface": "Codex CLI (агентный CLI). Правила — из Codex prompting + GPT-5 reasoning best-practices, НЕ из ChatGPT-чата.",
   "context_file": "AGENTS.md",
-  "rules_version": "2026-09-07",
+  "rules_version": "2026-09-23",
   "detect": {
     "id_prefixes": [
       "gpt-",
@@ -27,6 +27,28 @@
     ]
   },
   "generations": {
+    "gpt-6-sol": {
+      "match": [
+        "gpt-6-sol",
+        "gpt6-sol",
+        "gpt-6sol"
+      ],
+      "label": "GPT-6 Sol",
+      "doc": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#prompting-best-practices",
+      "rules_of": "gpt-6-astra",
+      "note": "Средняя модель линейки GPT-6: сильное рассуждение на требовательных задачах. Гайд промптинга у семейства GPT-6 ОДИН: вендор пишет, что приведённые промпты — отправная точка для всей линейки, а наблюдали поведение на Astra. Поэтому правила Astra применяются и здесь; проверяйте их на своей нагрузке. Отличие от Astra по рантайму: reasoning effort «none» поддерживается."
+    },
+    "gpt-6-luna": {
+      "match": [
+        "gpt-6-luna",
+        "gpt6-luna",
+        "gpt-6luna"
+      ],
+      "label": "GPT-6 Luna",
+      "doc": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#prompting-best-practices",
+      "rules_of": "gpt-6-astra",
+      "note": "Младшая модель линейки GPT-6: массовые однотипные задачи дешевле и быстрее. Гайд промптинга у семейства GPT-6 ОДИН: вендор пишет, что приведённые промпты — отправная точка для всей линейки, а наблюдали поведение на Astra. Поэтому правила Astra применяются и здесь; проверяйте их на своей нагрузке. Отличие от Astra по рантайму: reasoning effort «none» поддерживается."
+    },
     "gpt-6-astra": {
       "match": [
         "gpt-6-astra",
@@ -36,8 +58,8 @@
         "astra"
       ],
       "label": "GPT-6 Astra",
-      "doc": "https://developers.openai.com/api/docs/guides/latest-model",
-      "note": "Вышла 1 сентября 2026. Отличий от 5.6, видных прямо в тексте промпта, два: чаще останавливается и спрашивает вместо того, чтобы делать, и вендор опубликовал блоклист слов-маркеров для прозы. Оба лечатся строкой в промпте. Отдельно, к промпту не относится: temperature, top_p и top_logprobs модель больше не принимает, а reasoning effort «none» не поддерживается."
+      "doc": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra",
+      "note": "Старшая модель линейки GPT-6 (вместе с Sol и Luna); вышла 1 сентября 2026, и с 23 сентября вендор перевёл на неё главную страницу промптинга. Отличий от 5.6, видных прямо в тексте промпта, два: чаще останавливается и спрашивает вместо того, чтобы делать, и вендор опубликовал блоклист слов-маркеров для прозы. Оба лечатся строкой в промпте. Отдельно, к промпту не относится: temperature, top_p и top_logprobs модель больше не принимает, а reasoning effort «none» не поддерживается — у Sol и Luna поддерживается."
     },
     "gpt-5.6": {
       "match": [
@@ -46,11 +68,12 @@
         "5.6",
         "sol",
         "terra",
-        "luna"
+        "luna",
+        "cyber"
       ],
-      "label": "GPT-5.6 (sol/terra/luna)",
-      "doc": "https://developers.openai.com/api/docs/guides/prompt-guidance",
-      "note": "sol / terra / luna — ТРИ РАЗНЫЕ модели одного поколения (уровни цены и потолка качества), а не режимы. Алиас gpt-5.6 ведёт на sol. Гайд промптинга у них ОБЩИЙ — отдельные правила под варианты вендор не публикует, поэтому и мы их не заводим. Различаются только выбор модели и рантайм-параметры."
+      "label": "GPT-5.6 (sol/terra/luna/cyber)",
+      "doc": "https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6",
+      "note": "Прошлое поколение, ещё в каталоге. sol / terra / luna — ТРИ РАЗНЫЕ модели одного поколения (уровни цены и потолка качества), а не режимы; отдельно стоит cyber — модель под разрешённый поиск уязвимостей. Алиас gpt-5.6 ведёт на sol. Гайд промптинга у них ОБЩИЙ, и с выходом GPT-6 вендор перенёс его на отдельный адрес prompt-guidance-gpt-5p6: главная страница промптинга теперь описывает GPT-6. Имена sol и luna в GPT-6 переиспользованы, поэтому пишите версию: «sol» без неё читается как 5.6."
     },
     "gpt-5": {
       "match": [
@@ -71,7 +94,7 @@
   "config_notes": [
     "Постоянные правила проекта — в AGENTS.md (слитый из ~/.codex и каталогов от корня репо к текущему; глубже переопределяет), а не в каждом промпте.",
     "Codex CLI (~/.codex/config.toml): глубина рассуждения — model_reasoning_effort (minimal|low|medium|high|xhigh; xhigh зависит от модели), длина ответа — model_verbosity (low|medium|high). Задавайте их в конфиге, а не словами в промпте.",
-    "Responses API (тот же GPT-5.6, но другой слой — НЕ путать с CLI-конфигом): reasoning.effort (none|low|medium|high|xhigh|max), reasoning.mode: \"pro\" для сложных задач, text.verbosity (low|medium|high)."
+    "Responses API (те же модели GPT-6, но другой слой — НЕ путать с CLI-конфигом): reasoning.effort (none|low|medium|high|xhigh|max; у GPT-6 Astra «none» нет, у Sol и Luna есть), reasoning.mode: \"pro\" для сложных задач, text.verbosity (low|medium|high). При effort выше none у GPT-6 не передаются temperature, top_p и top_logprobs."
   ],
   "config_notes_sources": [
     "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
@@ -183,7 +206,7 @@
       "title": "Astra чаще спрашивает, чем делает: разрешите ей действовать",
       "why": "Astra задумана как собеседник и потому охотнее задаёт уточняющий вопрос, когда ответ мог бы поменять результат. На практике она останавливается там, где от неё ждали работы. Вендор советует сказать прямо: выводи намерение из контекста и склоняйся к действию, а «можешь ли ты», «я хочу», «помоги мне» считай поручением, а не приглашением к беседе.",
       "unless": "Если вы правда хотите обсудить подход до работы (архитектура, выбор библиотеки, спорное решение), эта строка мешает: она заставит модель делать вместо того, чтобы советоваться.",
-      "source": "https://developers.openai.com/api/docs/guides/latest-model#initiative-and-follow-through"
+      "source": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#initiative-and-follow-through"
     },
     {
       "id": "astra-user-over-skill",
@@ -194,7 +217,7 @@
       "title": "Правила проекта могут перебить вашу просьбу: задайте приоритет",
       "why": "Astra читает ваши файлы с правилами (AGENTS.md, навыки) наравне с промптом, и противоречие между ними она разрешает не в вашу пользу: останавливается, просит подтверждение или уходит в сторону. Вендор советует написать, что инструкции пользователя главнее правил из навыка, и попросить называть файл и цитировать строку, если навык всё же заставил её притормозить.",
       "unless": "Если правила проекта у вас намеренно жёстче просьб (запрет на прод, обязательное ревью), приоритет менять нельзя: он там и стоит.",
-      "source": "https://developers.openai.com/api/docs/guides/latest-model#instruction-following"
+      "source": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#instruction-following"
     },
     {
       "id": "astra-slop-blocklist",
@@ -205,7 +228,7 @@
       "title": "Пишете текст: дайте Astra список запрещённых оборотов",
       "why": "У Astra есть опубликованный вендором блоклист оборотов, по которым текст опознают как машинный. В списке «delve», «leverage», «it's worth noting», «Bottom Line:», «In short:», канцелярские связки и, что заметнее всего, конструкция противопоставления «This isn't about X. It's about Y» и любое «X, not Y». Просто попросить «пиши живее» слабее: работает именно перечень.",
       "unless": "Если текст служебный и его читает не человек, а парсер (json, лог, спецификация), список оборотов ни к чему.",
-      "source": "https://developers.openai.com/api/docs/guides/latest-model#personality-and-writing-style"
+      "source": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#personality-and-writing-style"
     },
     {
       "id": "astra-tests-restraint",
@@ -216,7 +239,7 @@
       "title": "Astra пишет тесты и на мелкие правки: скажите, когда не надо",
       "why": "Вендор прямо просит не писать тесты на обратимые мелкие изменения, которые просто повторяют реализацию, а если тест всё же пишется, то он должен проверять поведение. Иначе к каждой правке приезжает файл тестов, который вы оплатили и который ничего не ловит.",
       "unless": "Если у вас в проекте TDD и тест обязан появляться раньше кода, правило мимо: там это не лишняя работа, а процесс.",
-      "source": "https://developers.openai.com/api/docs/guides/latest-model#testing-and-verification"
+      "source": "https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra#testing-and-verification"
     }
   ],
   "harness": {

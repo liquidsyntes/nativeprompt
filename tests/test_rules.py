@@ -28,6 +28,13 @@ FROZEN = {
         "opus5-concise",
         "opus5-remove-verification",
         "opus5-report-all",
+        # Claude Opus 5.5, добавлены осознанно 23.09.2026 по странице промптинга
+        # вендора. Правила Opus 5 к ней тоже применяются — через rules_of.
+        "opus55-drop-think-carefully",
+        "opus55-explore-multi-app",
+        "opus55-finish-unattended",
+        "opus55-frontend-antipatterns",
+        "opus55-no-show-thinking",
     },
     "openai": {
         "codex-no-forced-cot", "codex-outcome-contract", "codex-lean",

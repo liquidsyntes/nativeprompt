@@ -9,16 +9,18 @@
 ![MIT](https://img.shields.io/badge/license-MIT-black)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
 ![zero deps](https://img.shields.io/badge/dependencies-0-brightgreen)
-![2459 tests](https://img.shields.io/badge/tests-2459%20passing-brightgreen)
+![2517 tests](https://img.shields.io/badge/tests-2517%20passing-brightgreen)
 ![no API keys](https://img.shields.io/badge/API%20keys-none-1f6feb)
-![latest models](https://img.shields.io/badge/GPT--6%20Astra%20%C2%B7%20Fable%205.1-supported-d97757)
+![latest models](https://img.shields.io/badge/Opus%205.5%20%C2%B7%20GPT--6-supported-d97757)
 
-Claude Code · Codex · 2459 tests · zero dependencies · no API key · runs offline
+Claude Code · Codex · 2517 tests · zero dependencies · no API key · runs offline
 
-> **Fresh.** Rules for **GPT-6 Astra** landed on 7 September 2026, six days after the
-> model shipped: all four behaviours that show up in the prompt text itself. Rules for
-> **Claude Fable 5.1** landed on 2 September, the day after its release. Full model list
-> below.
+> **Fresh.** Rules for **Claude Opus 5.5** landed on 23 September 2026, the day after
+> the model shipped: five behaviours that show up in the prompt text itself. The whole
+> **GPT-6** line — Astra, Sol and Luna — landed the same day: OpenAI moved its main
+> prompting page onto GPT-6, and the three models share one guide. Rules for **GPT-6
+> Astra** landed on 7 September, for **Claude Fable 5.1** on 2 September, the day after
+> its release. Full model list below.
 
 Scope: the **agentic CLIs** — Claude Code, Codex, Gemini CLI, Grok Build, Qwen Code and Kimi CLI. Not the API, not the web chat.
 
@@ -52,12 +54,29 @@ them together means guessing.
 
 | Model | Rules | Added | Vendor guide |
 |---|:--:|---|---|
-| **GPT-6 Astra** | 4 + family | 2026-09-07, six days after release | [latest-model](https://developers.openai.com/api/docs/guides/latest-model) |
-| GPT-5.6 (sol / terra / luna) | family | 2026-07-29 | [prompt-guidance](https://developers.openai.com/api/docs/guides/prompt-guidance) |
+| **Claude Opus 5.5** | 5 + Opus 5 rules + family | 2026-09-23, the day after release | [prompting-opus-5-5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5) |
+| **GPT-6 Astra / Sol / Luna** | 4 for the line + family | Astra 2026-09-07, Sol and Luna 2026-09-23 | [latest-model/gpt-6-astra](https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra) |
+| GPT-5.6 (sol / terra / luna / cyber) | family | 2026-07-29 | [prompt-guidance-gpt-5p6](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6) |
 | **Claude Fable 5.1** | 4 + family | 2026-09-02, the day after release | [prompting-fable-5-1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1) |
 | Claude Opus 5 | 4 + family | 2026-07-29 | [prompting-opus-5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5) |
 | Claude Sonnet 5, Opus 4.8 | family | 2026-07-29 | general best practices |
 | Gemini CLI, Grok Build, Qwen Code, Kimi CLI | one each | 2026-08-04 | vendors publish no prompting rules |
+
+**What changed in Opus 5.5.** Thinking can no longer be disabled, and asking the model
+to spell out its reasoning in the answer now hits a new refusal category,
+`reasoning_extraction` — the request comes back with `refusal`, and server-side fallback
+does not retry that one. On a long task the model ends its turn with a report and no tool
+call, which is exactly where an unattended agent stops. "Think step by step" now only
+delays the first token. In frontend work a blanket "avoid the generic AI look" swaps one
+default for another; the vendor's advice is to name the patterns. Opus 5 rules still
+apply — the 5.5 page says so itself, and the tool inherits them via `rules_of` rather
+than copying them.
+
+**What changed in the GPT-6 line.** Sol and Luna are separate models next to Astra, not
+modes. The prompting guide covers all three — the vendor says so explicitly — so Astra's
+rules apply to each. One runtime difference: reasoning effort `none` is unavailable on
+Astra and available on Sol and Luna. The names are reused: sol and luna also existed in
+GPT-5.6, so pass the version in `--model` or "sol" reads as 5.6.
 
 **What changed in Astra.** It asks a clarifying question where you expected work, and
 stops. It ships a vendor-published blocklist of tells that mark prose as machine-written
@@ -334,7 +353,7 @@ detect  →  analyze  →  rewrite  →  harness  →  explain          (+ updat
 [новое]            openai  https://learn.chatgpt.com/docs/prompting.md
 [без изменений]    claude  https://code.claude.com/docs/en/best-practices.md
 ...
-Итог: изменилось 1, новых 4, без изменений 17, недоступно 0 (из 25).
+Итог: изменилось 1, новых 2, без изменений 24, недоступно 0 (из 27).
 ```
 
 A weekly GitHub Actions job (`.github/workflows/update-rules.yml`) runs exactly that and fails when the official guidance moved. **The rules are never rewritten automatically** — a maintainer reads the changed doc, updates the JSON, and lands it in a PR, then records the new snapshot with `nativeprompt update --write`. That is a deliberate design choice: a cheat sheet you can audit is worth more than one that mutates silently.
@@ -357,7 +376,7 @@ Honest limits are tracked in [`CLAIMS.md`](CLAIMS.md).
 Verify first:
 
 ```bash
-python3 -m pytest -q          # 2459 tests: detection, detectors, rewrite, harness, rules integrity, frozen snapshot, self-check, refusal, hook context budget, reproducibility card
+python3 -m pytest -q          # 2517 tests: detection, detectors, rewrite, harness, rules integrity, frozen snapshot, self-check, refusal, hook context budget, reproducibility card
 ```
 
 **Adding or changing a rule.** Rules live in `nativeprompt/rules/<family>.json`. A rule is only accepted with a **link to the vendor's own documentation** — no folklore, no blog posts, no "it worked for me". Shape:

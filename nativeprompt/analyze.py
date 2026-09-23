@@ -596,6 +596,40 @@ def _c_code_task(p, low, t):
     return bool(_CODE_NOUN.search(low)) and task_shape(p) != "trivial"
 
 
+#: Поверхность, которую видит человек, — а не код вообще. Правило Opus 5.5 про
+#: дизайнерские дефолты просит перечислить запрещённые приёмы; к «почини
+#: миграцию» оно мимо, и гореть там значит платить контекстом за шум. Слово
+#: «дизайн» само по себе НЕ берём: «дизайн схемы базы» — не фронтенд. Слово
+#: «кнопка» тоже: оно стоит и в правке отступа, где перечислять стили нечего.
+_FRONTEND = re.compile(
+    r"(?i)(?:\b(?:лендинг\w*|сайт\w*|веб-страниц\w*|интерфейс\w*|фронтенд\w*|"
+    r"вёрстк\w*|верстк\w*|дашборд\w*|посадочн\w*)\b|"
+    r"\b(?:landing(?:\s+page)?|website|web\s+page|frontend|front-end|dashboard|"
+    r"html|css|react|vue|svelte|tailwind|ui)\b)"
+)
+
+#: Просьба СДЕЛАТЬ поверхность, а не разобраться в готовой. Вендор описывает
+#: ровно этот случай: «asked for frontend work without design direction». На
+#: «почему на мобиле съезжает css» списка запрещённых стилей не надо.
+_СОЗДАНИЕ_ЭКРАНА = re.compile(
+    r"(?i)\b(?:сделай|сделать|сверстай|свёрстай|сверстать|свёрстать|напиши|написать|"
+    r"собери|собрать|создай|создать|нарисуй|нарисовать|оформи|оформить|"
+    r"build|make|create|design|write|generate)\b"
+)
+
+
+def _c_frontend_task(p, low, t):
+    """Просьба сделать видимую поверхность без заданного направления стиля.
+
+    Два условия сразу: предмет — экран (а не бэкенд) и глагол — «сделай»
+    (а не «почему не работает»). Пустяки отсекаем тем же способом, что и
+    `code_task`: на «поправь отступ» перечислять приёмы дизайна незачем.
+    """
+    if not _FRONTEND.search(low) or not _СОЗДАНИЕ_ЭКРАНА.search(low):
+        return False
+    return task_shape(p) != "trivial"
+
+
 _CHECKS = {
     "always": _c_always,
     "writing_task": _c_writing_task,
@@ -617,6 +651,7 @@ _CHECKS = {
     "antiformatting": _c_antiformatting,
     "long_task": _c_long_task,
     "code_task": _c_code_task,
+    "frontend_task": _c_frontend_task,
 }
 
 

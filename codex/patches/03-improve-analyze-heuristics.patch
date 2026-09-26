@@ -1,0 +1,29 @@
+--- nativeprompt/analyze.py
++++ nativeprompt/analyze.py
+@@ -34,6 +34,7 @@ _PATH = re.compile(
+ #: и «latest» в него не попадают.
+ _VERIFY_MEANS = re.compile(
+     r"(\b(?:про|пере|от|до|рас|по|за)?тест|\b(?:re)?test|сборк|build|pytest|jest|npm |lint|"
++    r"mypy|flake8|tsc|type\s*check(?:ing)?|coverage|"
+     r"прогони|run |скрин|screenshot|exit code|assert|провер\w* (что|сборк|прошл)|"
+     r"passes|компилир)",
+     re.I,
+@@ -76,7 +77,7 @@ _CODE_NOUN_LOOSE = ("эндпоинт", "роут", "компонент", "миграци", "репозитор", "коммит",
+                     "кнопк", "вёрстк", "верстк", "навбар", "кэширован", "кеширован",
+                     "пагинац", "ретра", "таймаут", "логировани", "авторизац",
+                     "аутентификац", "миддлвар", "вебхук", "сокет", "воркер",
+-                    "пайплайн", "линтер")
++                    "пайплайн", "линтер", "интерфейс", "токен", "бд", "архитектур")
+ #: Английские формы задаются ЯВНО, а не корнем с общим суффиксом. Общий суффикс
+ #: `(s|es|ing)?` впустил обратно «building» (через build+ing) и «testes» (test+es),
+ #: а «queries» не поймал вовсе — query+s такой формы не даёт. Перечислить формы
+@@ -88,7 +89,8 @@ _CODE_NOUN_EN = (
+     r"tests?", r"testing", r"builds?",
+     r"buttons?", r"caching", r"caches?", r"retr(?:y|ies)", r"timeouts?",
+     r"paginations?", r"webhooks?", r"sockets?", r"workers?",
+-    r"pipelines?", r"linters?",
++    r"pipelines?", r"linters?", r"interfaces?", r"tokens?", r"dbs?",
++    r"databases?", r"architectures?",
+ )
+ #: «Запрос» намеренно НЕ в списке: в русском это чаще запрос в суд, чем к базе.
+ _CODE_NOUN = re.compile(

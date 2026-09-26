@@ -14,6 +14,27 @@ from .harness import recommend_harness
 from .rewrite import rewrite, build_metaprompt
 from .explain import build_report, render_report
 
+
+def create_app(*args, **kwargs):
+    from .web import create_app as _create_app
+    return _create_app(*args, **kwargs)
+
+
+def create_ui(*args, **kwargs):
+    from .web import create_ui as _create_ui
+    return _create_ui(*args, **kwargs)
+
+
+def process_prompt(*args, **kwargs):
+    from .web import process_prompt as _process_prompt
+    return _process_prompt(*args, **kwargs)
+
+
+def launch_web(*args, **kwargs):
+    from .web import launch_web as _launch_web
+    return _launch_web(*args, **kwargs)
+
+
 __all__ = [
     "__version__",
     "load_family",
@@ -27,4 +48,9 @@ __all__ = [
     "build_metaprompt",
     "build_report",
     "render_report",
+    "create_app",
+    "create_ui",
+    "process_prompt",
+    "launch_web",
 ]
+

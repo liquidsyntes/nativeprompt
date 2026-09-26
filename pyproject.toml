@@ -13,6 +13,9 @@ authors = [{ name = "Edvard Grishin" }]
 keywords = ["prompt", "prompt-engineering", "llm", "claude", "openai", "codex", "prompt-optimizer"]
 dependencies = []  # zero runtime deps on purpose: stdlib only, offline, deterministic
 
+[project.optional-dependencies]
+web = ["gradio>=4.0.0"]
+
 [project.urls]
 Homepage = "https://github.com/edvardgrishin27/nativeprompt"
 Source = "https://github.com/edvardgrishin27/nativeprompt"

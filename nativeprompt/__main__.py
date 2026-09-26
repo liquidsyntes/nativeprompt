@@ -5,6 +5,7 @@
   detect [--model M]                                          какая модель определилась
   rules [семейство]                                           показать правила + источники
   update [--write] [--timeout N]                              сверить свежесть офиц. доков
+  web [--host H] [--port P] [--share] [--inbrowser]           локальный веб-интерфейс (Gradio)
 """
 
 import argparse
@@ -299,6 +300,33 @@ def cmd_update(args):
     return 1 if res["summary"]["action_needed"] and not args.write else 0
 
 
+def cmd_web(args):
+    """Запустить локальный веб-интерфейс на базе Gradio."""
+    _force_utf8_io()
+    try:
+        from .web import launch_web
+        return launch_web(
+            host=args.host,
+            port=args.port,
+            share=args.share,
+            inbrowser=args.inbrowser,
+            default_model=getattr(args, "model", None),
+        )
+    except ImportError:
+        print(
+            "Для работы веб-интерфейса требуется пакет gradio.\n"
+            "Установите его командой: pip install gradio",
+            file=sys.stderr,
+        )
+        return 1
+    except KeyboardInterrupt:
+        print("\nОстановка веб-сервера nativeprompt.")
+        return 0
+    except Exception as e:
+        print(f"Ошибка запуска веб-сервера: {e}", file=sys.stderr)
+        return 1
+
+
 def build_parser():
     p = argparse.ArgumentParser(
         prog="nativeprompt",
@@ -344,6 +372,14 @@ def build_parser():
     pu.add_argument("--timeout", type=int, default=20)
     pu.add_argument("--json", action="store_true")
     pu.set_defaults(func=cmd_update)
+
+    pw = sub.add_parser("web", help="запустить локальный веб-интерфейс на базе Gradio")
+    pw.add_argument("--host", default="127.0.0.1", help="хост для запуска сервера (по умолчанию 127.0.0.1)")
+    pw.add_argument("--port", type=int, default=7860, help="порт для запуска сервера (по умолчанию 7860)")
+    pw.add_argument("--share", action="store_true", help="создать публичную ссылку (Gradio share)")
+    pw.add_argument("--inbrowser", action="store_true", help="автоматически открыть интерфейс в браузере")
+    pw.add_argument("--model", "-m", default=None, help="модель по умолчанию в веб-интерфейсе")
+    pw.set_defaults(func=cmd_web)
 
     return p
 

@@ -9,11 +9,11 @@
 ![MIT](https://img.shields.io/badge/license-MIT-black)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
 ![zero deps](https://img.shields.io/badge/dependencies-0-brightgreen)
-![2518 tests](https://img.shields.io/badge/tests-2518%20passing-brightgreen)
+![2529 tests](https://img.shields.io/badge/tests-2529%20passing-brightgreen)
 ![no API keys](https://img.shields.io/badge/API%20keys-none-1f6feb)
 ![latest models](https://img.shields.io/badge/Opus%205.5%20%C2%B7%20GPT--6-supported-d97757)
 
-Claude Code · Codex · 2518 tests · zero dependencies · no API key · runs offline
+Claude Code · Codex · 2529 tests · zero dependencies · no API key · runs offline
 
 > **Fresh.** Rules for **Claude Opus 5.5** landed on 23 September 2026, the day after
 > the model shipped: five behaviours that show up in the prompt text itself. The whole
@@ -376,7 +376,7 @@ Honest limits are tracked in [`CLAIMS.md`](CLAIMS.md).
 Verify first:
 
 ```bash
-python3 -m pytest -q          # 2518 tests: detection, detectors, rewrite, harness, rules integrity, frozen snapshot, self-check, refusal, hook context budget, reproducibility card
+python3 -m pytest -q          # 2529 tests: detection, detectors, rewrite, harness, rules integrity, frozen snapshot, self-check, refusal, hook context budget, reproducibility card
 ```
 
 **Adding or changing a rule.** Rules live in `nativeprompt/rules/<family>.json`. A rule is only accepted with a **link to the vendor's own documentation** — no folklore, no blog posts, no "it worked for me". Shape:
